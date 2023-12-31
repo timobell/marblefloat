@@ -1,7 +1,7 @@
 let ball;
 
 function setup() {
-	new Canvas(500, 500);
+	new Canvas(windowWidth, windowHeight);
 
 	ball = new Sprite();
 	ball.diameter = 50;
