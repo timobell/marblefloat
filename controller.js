@@ -3,30 +3,14 @@ function mapvalue(min_in, max_in, min_out, max_out, value) {
 }
 
 function movement() {
-    // gfactor = -20 * contro.rightStick.y +35;
-    // world.gravity.x = gfactor* contro.leftStick.x;
-    // world.gravity.y = gfactor* contro.leftStick.y;
-    // if (kb.pressed('space')) {
-    //     world.gravity.x = 0;
-    //     world.gravity.y = 0;
-    // }
-
-    // if (world.gravity.x < -gfactor) {
-    //     world.gravity.x = -gfactor;
-    // }
-    // if (world.gravity.x > gfactor) {
-    //     world.gravity.x = gfactor;
-    // }
-    // if (world.gravity.y < -gfactor) {
-    //     world.gravity.y = -gfactor;
-    // }
-    // if (world.gravity.y > gfactor) {
-    //     world.gravity.y = gfactor;
-    // }
-    // gfactor = -400 * contro.rightStick.y + 500;
+    if (contro.length > 0) {
+        xmove = contro.leftStick.x;
+        ymove = contro.leftStick.y;
+        leftcontroller.x = 150+xmove*45;
+        leftcontroller.y = height-75+ymove*45;
+    }
     gfactor = mapvalue(1, -1, 500, 1000, contro.rightStick.y);
-
-    ball.applyForce(gfactor* contro.leftStick.x, gfactor* contro.leftStick.y);
+    ball.applyForce(gfactor*xmove, gfactor*ymove);
     if (kb.pressed('space')) {
         ball.vel.x = 0;
         ball.vel.y = 0;
@@ -52,6 +36,4 @@ function movement() {
         let Fy = (ball.y-marbles[i].y)*mapvalue(marblemin,marblemax,0.4,1.2,marblemax-d);
         marbles[i].applyForce(Fx,Fy);
     }
-    // marbles.moveTowards(ball,0.1);
-    
 }

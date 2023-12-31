@@ -1,12 +1,18 @@
-let ball;
-var gfactor= 10;
-let marbles;
-let gameover = false;
 let marblemin = 10;
 let marblemax = 50;
 
+var ball;
+var gfactor;
+var marbles;
+var gameover;
+var gamestart;
+var gameend;
+var leftcontroller;
+var xmove;
+var ymove;
+
 function spawnMarble() {
-	marble = new marbles.Sprite(random(marblemax,width - marblemax), random(marblemax, height -marblemax));
+	marble = new marbles.Sprite(random(marblemax,width - marblemax), random(marblemax, height-150-marblemax));
 	marble.collider = 'd';
 	marble.diameter = random(marblemin,marblemax);
 	marble.drag = 1;
@@ -20,20 +26,30 @@ function spawnMarble() {
 function setup() {
 	new Canvas(windowWidth, windowHeight);
 	
+	allSprites.remove();
+	
 	ball = new Sprite();
 	ball.diameter = 50;
 	ball.drag = 2;
 	ball.mass = 10;
+	ball.color = 'blue';
 
-	box = new Sprite(width/2,height/2,width,height,'s');
+	box = new Sprite(width/2,height/2-75,width,height-150,'s');
 	box.shape = 'chain';
 
 	marbles = new Group();
-	// for (var i = 0; i < 10; i++) {
-	// 	spawnMarble();
-	// }
 
+	controllercircle = new Sprite(150,height-75,'s');
+	controllercircle.diameter = 100;
+	controllercircle.fill = 'gray';
+	controllercircle.shape = 'chain';
 
+	leftcontroller = new Sprite(150,height-75,'s');
+	leftcontroller.diameter = 30;
+	leftcontroller.fill = 'gray';
+
+	gamestart = frameCount;
+	gameover = false;
 	allSprites.autoCull = false;
 }
 
@@ -46,18 +62,23 @@ function draw() {
 		renderStats();
 		if (ball.colliding(marbles)) {
 			gameover = true;
+			gameend = frameCount;
 		}
 		if (frameCount%60 == 0) {
 			spawnMarble();
 		}
 
 	} else {
-		delete allSprites;
+		marbles.remove();
+		ball.remove();
 		background('black');
 		textSize(50);
 		fill('yellow');
 		textAlign(CENTER);
-		text(`game over ${frameCount}`, width/2, height/2);
+		text(`game over ${gameend-gamestart}`, width/2, height/2);
+		if (contro.pressing('a')) {
+			setup();
+		}
 	}
 
 }
