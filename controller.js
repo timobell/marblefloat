@@ -3,11 +3,25 @@ function mapvalue(min_in, max_in, min_out, max_out, value) {
 }
 
 function movement() {
-    if (contro.length > 0) {
+    if (havecontroller) {
         xmove = contro.leftStick.x;
         ymove = contro.leftStick.y;
-        leftcontroller.x = 150+xmove*45;
-        leftcontroller.y = height-75+ymove*45;
+        leftcontrollerStick.x = 150+xmove*45;
+        leftcontrollerStick.y = height-75+ymove*45;
+    } else {
+        // No gamepad controller
+        var x = 0;
+        var y = 0;
+        if (leftcontroller.mouse.dragging()) {
+            x = leftcontroller.mouse.x;
+            y = leftcontroller.mouse.y;
+            if (x<-100) x = -100;
+            if (x> 100) x = 100;
+            if (y<-100) y = -100;
+            if (y> 100) y = 100;
+        }
+        xmove = -x/100; //(150-x);
+        ymove = -y/100; //(height-75-y)/45;
     }
     gfactor = mapvalue(1, -1, 500, 1000, contro.rightStick.y);
     ball.applyForce(gfactor*xmove, gfactor*ymove);
