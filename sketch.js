@@ -14,7 +14,7 @@ var ymove;
 var havecontroller;
 
 function spawnMarble() {
-	marble = new marbles.Sprite(random(marblemax,width - marblemax), random(marblemax, height-150-marblemax));
+	marble = new marbles.Sprite(random(marblemax,1000 - marblemax), random(marblemax, 1000-150-marblemax));
 	marble.collider = 'd';
 	marble.diameter = random(marblemin,marblemax);
 	marble.drag = 1;
@@ -30,13 +30,13 @@ function setup() {
 	
 	allSprites.remove();
 	
-	ball = new Sprite();
+	ball = new Sprite(500,500);
 	ball.diameter = 50;
 	ball.drag = 2;
 	ball.mass = 10;
 	ball.color = 'blue';
 	
-	box = new Sprite(width/2,height/2-75,width,height-150,'s');
+	box = new Sprite(500,500-75,2200,2200,'s');
 	box.stroke = 'black';
 	box.shape = 'chain';
 	
@@ -58,6 +58,11 @@ function setup() {
 	neu.y = 50000;
 	neu.text = 'start';
 	neu.textAlign = CENTER;
+
+	//design
+	hintergrund = new Sprite(500,500,4000,4000,'n');
+	hintergrund.img = 'fliesen.avif';
+	hintergrund.layer = 0;
 }
 
 function drawController() {
@@ -74,8 +79,6 @@ function draw() {
 			background('lightgreen');
 			leftcontrollerStick.remove();
 		}
-
-		line(ball.x, ball.y, ball.x + ball.vel.x * 5,ball.y + ball.vel.y * 5);
 		movement();
 		renderStats();
 		if (ball.colliding(marbles)) {
@@ -85,14 +88,17 @@ function draw() {
 		if (frameCount%60 == 0) {
 			spawnMarble();
 		}
+		camera.x = ball.x;
+		camera.y = ball.y;
 	} else {
 		marbles.remove();
 		ball.remove();
 		background('black');
 		fill('yellow');
 		textAlign(CENTER);
+		neu.y = camera.y + 40;
+		neu.x = camera.x;
 		text(`game over ${gameend-gamestart}`, width/2, height/2);
-		neu.y = height/2+70;
 		renderStats();
 		if (contro.pressing('a') || neu.mouse.pressed()) {
 			setup();
