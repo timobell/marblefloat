@@ -7,10 +7,11 @@ var marbles;
 var gameover;
 var gamestart;
 var gameend;
-var leftcontroller;
-var leftcontrollerStick;
+var leftStick;
+var rightStick;
 var xmove;
 var ymove;
+var gstick;
 var havecontroller;
 
 function spawnMarble() {
@@ -26,7 +27,7 @@ function spawnMarble() {
 }
 
 function setup() {
-	new Canvas(windowWidth, windowHeight);
+	let cnv = new Canvas(windowWidth, windowHeight);
 	
 	allSprites.remove();
 	
@@ -35,20 +36,19 @@ function setup() {
 	ball.drag = 2;
 	ball.mass = 10;
 	ball.color = 'blue';
+	ball.layer = 1;
 	
 	box = new Sprite(500,500-75,2200,2200,'s');
+	box.strokeWeight = 3;
 	box.stroke = 'black';
 	box.shape = 'chain';
 	
 	marbles = new Group();
 	
-	leftcontroller = new Sprite(150,height-75,'s');
-	leftcontroller.diameter = 100;
-	leftcontroller.fill = 'gray';
-
-	leftcontrollerStick = new Sprite(150,height-75,'s');
-	leftcontrollerStick.diameter = 30;
-	leftcontrollerStick.fill = 'gray';
+	leftStick = new GameControllerStick("left", 100,height-100);
+	leftStick.visible(!gameover);
+	rightStick = new GameControllerStick("right", width-100,height-100);
+	rightStick.visible(!gameover);
 
 	gamestart = frameCount;
 	gameover = false;
@@ -58,31 +58,46 @@ function setup() {
 	neu.y = 50000;
 	neu.text = 'start';
 	neu.textAlign = CENTER;
-
-	//design
-	hintergrund = new Sprite(500,500,4000,4000,'n');
-	hintergrund.img = 'fliesen.avif';
+	
+	hintergrund = new Sprite(500,425,3200,3200,'n');
+	hintergrund.img = 'fliesennnn.png';
 	hintergrund.layer = 0;
+
+	marbles.layer = 1;
+	
 }
 
-function drawController() {
+function touchStarted(event) {
+	leftStick.touchStart(event);
+	rightStick.touchStart(event);
+}
+
+function touchMoved(event) {
+	leftStick.touchMoved(event);
+	rightStick.touchMoved(event);
+}
+
+function touchEnded(event) {
+	leftStick.touchEnded(event);
+	rightStick.touchEnded(event);
+}
+
+function drawCircle(x,y) {
+	ellipse(x, y, 50, 50);
+	return false;
 }
 
 function draw() {
 	if (!gameover) {
 		clear();
 		havecontroller = contro.length > 0;
-
-		if (havecontroller) {
-			background('gray');
-		} else {
-			background('lightgreen');
-			leftcontrollerStick.remove();
-		}
+		background('gray');
 		movement();
 		renderStats();
 		if (ball.colliding(marbles)) {
 			gameover = true;
+			leftStick.visible(!gameover);
+			rightStick.visible(!gameover);
 			gameend = frameCount;
 		}
 		if (frameCount%60 == 0) {
@@ -90,9 +105,12 @@ function draw() {
 		}
 		camera.x = ball.x;
 		camera.y = ball.y;
+		leftStick.update();
+		rightStick.update();
 	} else {
 		marbles.remove();
 		ball.remove();
+		hintergrund.remove();
 		background('black');
 		fill('yellow');
 		textAlign(CENTER);
@@ -102,6 +120,8 @@ function draw() {
 		renderStats();
 		if (contro.pressing('a') || neu.mouse.pressed()) {
 			setup();
+			leftStick.visible(!gameover);
+			rightStick.visible(!gameover);
 		}
 	}
 
