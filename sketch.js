@@ -45,9 +45,10 @@ function setup() {
 	
 	marbles = new Group();
 	
-	leftStick = new GameControllerStick("left", 100,height-100);
+
+	leftStick = new GameControllerStick(cnv,"left", 100,height-100);
 	leftStick.visible(!gameover);
-	rightStick = new GameControllerStick("right", width-100,height-100);
+	rightStick = new GameControllerStick(cnv,"right", width-100,height-100);
 	rightStick.visible(!gameover);
 
 	gamestart = frameCount;
@@ -65,21 +66,6 @@ function setup() {
 
 	marbles.layer = 1;
 	
-}
-
-function touchStarted(event) {
-	leftStick.touchStart(event);
-	rightStick.touchStart(event);
-}
-
-function touchMoved(event) {
-	leftStick.touchMoved(event);
-	rightStick.touchMoved(event);
-}
-
-function touchEnded(event) {
-	leftStick.touchEnded(event);
-	rightStick.touchEnded(event);
 }
 
 function drawCircle(x,y) {

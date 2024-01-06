@@ -1,5 +1,5 @@
 class GameControllerStick {
-    constructor(name, x, y) {
+    constructor(cnv,name, x, y) {
         this.name = name;
         this.x = x;
         this.y = y;
@@ -22,6 +22,10 @@ class GameControllerStick {
 
         allSprites.overlaps(this.circle);
         allSprites.overlaps(this.knob);    
+
+        cnv.canvas.addEventListener('touchstart',(event)=> (this.touchStart(event)));
+        cnv.canvas.addEventListener('touchmoved',(event)=> (this.touchMoved(event)));
+        cnv.canvas.addEventListener('touchend',(event)=> (this.touchEnd(event)));
     }
     update() {
         // Center of circle
